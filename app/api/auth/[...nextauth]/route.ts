@@ -12,8 +12,20 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
-}
 
-const handler = NextAuth(authOptions)
+  callbacks: {
+    async session({ session, user }) {
+      session.user = { ...session.user, id: user.id} as {
+        id: string;
+        name: string;
+        email: string;
+      };
 
-export { handler as GET, handler as POST }
+      return session;
+    },
+  },
+};
+
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
